@@ -22,6 +22,7 @@ import { Checkbox } from "../ui/checkbox"
 import { useRouter } from "next/navigation"
 import { IEvent } from "@/lib/database/models/event.model"
 import { createEvent, updateEvent } from "@/lib/actions/event.actions"
+import Dropdown from "../shared/Dropdown"
 
 interface EventFormProps {
   userId: string
@@ -40,7 +41,7 @@ const formSchema = z.object({
   categoryId: z.string(),
   fees: z.string(),
   isFree: z.boolean(),
-  url: z.string().url()
+  url: z.string()
 })
 
 const eventDefaultValues = {
@@ -127,6 +128,18 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                 <FormLabel>Username</FormLabel>
                 <FormControl>
                   <Input placeholder="Event title" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl>
+                  <Dropdown onChangeHandler={field.onChange} value={field.value} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

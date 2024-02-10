@@ -32,3 +32,52 @@ export type UpdateEventParams = {
   }
   path: string
 }
+
+export type GetAllEventsParams = {
+  query: string,
+  category: string,
+  page: number,
+  limit: number
+}
+
+export type CreateCategoryParams = {
+  categoryName: string
+}
+
+export type CreateUserParams = {
+  clerkId: string,
+  email: string,
+  firstname: string,
+  lastname: string,
+  usename: string,
+  photo: string,
+}
+
+export type UpdateUserParams = {
+  firstname: string,
+  lastname: string,
+  usename: string,
+  photo: string,
+}
+
+
+export type DeleteEventParams = {
+  eventId: string
+  path: string
+}
+
+export type UrlQueryParams = {
+  params: string,
+  key: string,
+  value: string | null,
+}
+
+export type RemoveUrlQueryParams = {
+  params: string
+  keysToRemove: string[]
+}
+
+export type SearchParamProps = {
+  params: { id: string },
+  searchParams: { [key: string]: string | string[] | undefined }
+}
