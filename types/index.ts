@@ -47,16 +47,16 @@ export type CreateCategoryParams = {
 export type CreateUserParams = {
   clerkId: string,
   email: string,
-  firstname: string,
-  lastname: string,
-  usename: string,
+  firstName: string,
+  lastName: string,
+  username: string,
   photo: string,
 }
 
 export type UpdateUserParams = {
-  firstname: string,
-  lastname: string,
-  usename: string,
+  firstName: string,
+  lastName: string,
+  username: string,
   photo: string,
 }
 

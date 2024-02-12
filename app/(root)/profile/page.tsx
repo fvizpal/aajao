@@ -1,9 +1,14 @@
+import { auth } from '@clerk/nextjs'
 import React from 'react'
 
-const page = () => {
+const ProfilePage = () => {
+  const { sessionClaims } = auth()
+  const userId = sessionClaims?.userId as string;
+
+
   return (
-    <div>page</div>
+    <div>ProfilePage</div>
   )
 }
 
-export default page
+export default ProfilePage

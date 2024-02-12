@@ -30,8 +30,8 @@ export async function checkoutOrder(order: CheckoutOrderParamas) {
         buyerId: order.buyerId,
       },
       mode: 'payment',
-      success_url: `${'/'}`,
-      cancel_url: `${'/'}`
+      success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/profile`,
+      cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/`,
     });
 
     redirect(session.url!);
