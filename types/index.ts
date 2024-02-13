@@ -97,3 +97,9 @@ export type createOrderPramas = {
   totalAmount: string
   createdAt: Date
 }
+
+export type GetOrdersByUserParams = {
+  userId: string | null
+  limit?: number
+  page: string | number | null
+}

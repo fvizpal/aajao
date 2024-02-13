@@ -1,7 +1,7 @@
 'use server'
 
 import Stripe from 'stripe';
-import { CheckoutOrderParamas, createOrderPramas } from "@/types";
+import { CheckoutOrderParamas, GetOrdersByUserParams, createOrderPramas } from "@/types";
 import { redirect } from 'next/navigation';
 import { connectToDatabase } from '../database';
 import Order from '../database/models/order.model';
@@ -56,3 +56,21 @@ export const createOrder = async (order: createOrderPramas) => {
   }
 }
 
+export const getOrdersByUser = async ({ userId, limit = 3, page }: GetOrdersByUserParams) => {
+
+  try {
+    await connectToDatabase();
+
+    const skipAmount = (Number(page) - 1) * limit;
+    const conditions = { buyerId: userId };
+
+    const orders = Order.find
+
+
+
+
+
+  } catch (error) {
+    console.log(error);
+  }
+}
