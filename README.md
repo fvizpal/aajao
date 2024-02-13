@@ -1,11 +1,10 @@
-<h1 align="center">Aajao - MNNIT events platform</h1>
-<p align="center">
-</p>
+<h1 align="center">Aajao</h1>
+<p align="center">MNNIT events platform</p>
 
 ## Getting Started
 1. Clone the repository: 
 ```bash
-git clone https://github.com/fvizpal/mess-relay-app.git
+git clone https://github.com/fvizpal/aajao.git
 ```
 
 2. Install dependencies:

@@ -23,6 +23,9 @@ import { useRouter } from "next/navigation"
 import { IEvent } from "@/lib/database/models/event.model"
 import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import Dropdown from "../shared/Dropdown"
+import FileUploader from "../shared/FileUploader"
+import { useState } from "react"
+import { useUploadThing } from "@/lib/uploadthing"
 
 interface EventFormProps {
   userId: string
@@ -59,6 +62,8 @@ const eventDefaultValues = {
 
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
 
+  const [files, setFiles] = useState<File[]>([]);
+
   const initialValues = event && type === 'Update'
     ? {
       ...event,
@@ -73,11 +78,21 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
     defaultValues: initialValues
   })
 
+  const { startUpload } = useUploadThing('imageUploader')
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    let uploadedImageUrl = values.imageUrl;
+    if (files.length > 0) {
+      const uploadedImages = await startUpload(files);
+
+      if (!uploadedImages) return
+      uploadedImageUrl = uploadedImages[0].url
+    }
+
     if (type === 'Create') {
       try {
         const newEvent = await createEvent({
-          event: values,
+          event: { ...values, imageUrl: uploadedImageUrl },
           userId,
           path: '/profile'
         })
@@ -100,7 +115,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       try {
         const updatedEvent = await updateEvent({
           userId,
-          event: { ...values, _id: eventId },
+          event: { ...values, imageUrl: uploadedImageUrl, _id: eventId },
           path: `events/${eventId}`
         })
 
@@ -154,6 +169,22 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
               <FormItem className="w-full">
                 <FormControl className="h-72">
                   <Textarea placeholder="Description" {...field} className="rounded-2xl" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="imageUrl"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormControl className="h-72">
+                  <FileUploader
+                    onFieldChange={field.onChange}
+                    imageUrl={field.value}
+                    setFiles={setFiles}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
