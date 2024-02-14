@@ -1,7 +1,7 @@
 'use server'
 
 import Stripe from 'stripe';
-import { CheckoutOrderParamas, GetOrdersByUserParams, createOrderPramas } from "@/types";
+import { CheckoutOrderParamas, GetOrdersByEventParams, GetOrdersByUserParams, createOrderPramas } from "@/types";
 import { redirect } from 'next/navigation';
 import { connectToDatabase } from '../database';
 import Order from '../database/models/order.model';
@@ -91,3 +91,15 @@ export const getOrdersByUser = async ({ userId, limit = 3, page }: GetOrdersByUs
     console.log(error);
   }
 }
+
+// export const getOrdersByEvents = async ({eventId, searchString} : GetOrdersByEventParams) => {
+//   try {
+//     await connectToDatabase();
+//     if(!eventId) throw new Error('eventId not provided');
+
+
+
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }

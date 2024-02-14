@@ -109,3 +109,8 @@ export type GetEventsByUserParams = {
   limit?: number
   page: string | number | null
 }
+
+export type GetOrdersByEventParams = {
+  eventId: string
+  searchText: string
+}
