@@ -1,5 +1,7 @@
 import Collection from '@/components/shared/Collection';
 import { Button } from '@/components/ui/button';
+import { getEventsByUser } from '@/lib/actions/event.actions';
+import { getOrdersByUser } from '@/lib/actions/order.actions';
 import { IOrder } from '@/lib/database/models/order.model';
 import { SearchParamProps } from '@/types';
 import { auth } from '@clerk/nextjs'
@@ -40,7 +42,7 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
           limit={3}
           page={ordersPage}
           urlParamName='ordersPage'
-          totalPages={orders.totalPages}
+          totalPages={orders?.totalPages}
         />
       </section>
 
@@ -57,7 +59,7 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
 
       <section>
         <Collection
-          data={organisedEvents}
+          data={organisedEvents?.data}
           emptyTitle='No events have been created yet'
           emptyStateSubText='Create some now :!'
           limit={3}

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache"
 import Event from "../database/models/event.model"
 import User from "../database/models/user.model"
 import { connectToDatabase } from "../database"
-import { CreateEventParams, DeleteEventParams, GetAllEventsParams, UpdateEventParams } from "@/types"
+import { CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, UpdateEventParams } from "@/types"
 import Category from "../database/models/category.model"
 
 const populateEvent = (query: any) => {
@@ -108,5 +108,38 @@ export async function getAllEvents({ query, limit = 6, page, category }: GetAllE
     }
   } catch (error) {
     console.log(error)
+  }
+}
+
+export async function getEventsByUser({ userId, limit = 6, page }: GetEventsByUserParams) {
+  try {
+    await connectToDatabase();
+
+    const conditions = { organiser: userId };
+    const skipAmount = (Number(page) - 1) * limit;
+
+    const events = await Event.find(conditions)
+      .sort({ createdAt: 'desc' })
+      .skip(skipAmount)
+      .limit(limit)
+      .populate({
+        path: 'category',
+        model: Category,
+        select: '_id name'
+      })
+      .populate({
+        path: 'organiser',
+        model: User,
+        select: '_id firstName lastName'
+      })
+
+    const eventsCount = await Event.countDocuments(conditions);
+
+    return {
+      data: JSON.parse(JSON.stringify(events)),
+      totalPages: eventsCount / limit + 1,
+    }
+  } catch (error) {
+    console.log(error);
   }
 }

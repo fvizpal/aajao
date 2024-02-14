@@ -5,6 +5,8 @@ import { CheckoutOrderParamas, GetOrdersByUserParams, createOrderPramas } from "
 import { redirect } from 'next/navigation';
 import { connectToDatabase } from '../database';
 import Order from '../database/models/order.model';
+import Event from '../database/models/event.model';
+import User from '../database/models/user.model';
 
 export async function checkoutOrder(order: CheckoutOrderParamas) {
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -64,12 +66,27 @@ export const getOrdersByUser = async ({ userId, limit = 3, page }: GetOrdersByUs
     const skipAmount = (Number(page) - 1) * limit;
     const conditions = { buyerId: userId };
 
-    const orders = Order.find
+    const orders = await Order.find(conditions)
+      .distinct('event._id')
+      .sort({ createdAt: 'desc' })
+      .skip(skipAmount)
+      .limit(limit)
+      .populate({
+        path: 'event',
+        model: Event,
+        populate: {
+          path: 'organiser',
+          model: User,
+          select: '_id firstName lastName',
+        }
+      })
 
+    const ordersCount = await Order.distinct('event._id').countDocuments(conditions);
 
-
-
-
+    return {
+      data: JSON.parse(JSON.stringify(orders)),
+      totalPages: (ordersCount / limit) + 1,
+    }
   } catch (error) {
     console.log(error);
   }
