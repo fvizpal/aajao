@@ -16,7 +16,7 @@ type CollectionProps = {
 const Collection = ({ data, emptyTitle, emptyStateSubText, page, totalPages = 0, collectionType, urlParamName }: CollectionProps) => {
   return (
     <>
-      {data.length > 0 ? (
+      {data?.length > 0 ? (
         <div>
           <ul>
             {data.map((event) => {

@@ -126,23 +126,20 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
       } catch (error) {
         console.log(error);
       }
-
-
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 p-10">
         <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
             name="title"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
+              <FormItem className="w-full">
                 <FormControl>
-                  <Input placeholder="Event title" {...field} />
+                  <Input placeholder="Event title" {...field} className="bg-slate-100 h-[54px] placeholder:text-gray-500 rounded-xl px-4 py-3 border-none" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -168,7 +165,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl className="h-72">
-                  <Textarea placeholder="Description" {...field} className="rounded-2xl" />
+                  <Textarea placeholder="Description" {...field} className="bg-gray-50 flex flex-1 placeholder:text-gray-500 px-5 py-3 border-none rounded-xl" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -198,7 +195,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <div className="flex justify-center items-center h-[54px] w-full overflow-hidden rounded-full px-4 py-2">
+                  <div className="flex justify-center items-center h-[54px] w-full overflow-hidden rounded-xl px-4 py-2 bg-slate-100">
                     <Image
                       src="/assets/icons/location.svg"
                       alt="location"
@@ -206,7 +203,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                       height={24}
                     />
 
-                    <Input placeholder="Event location or Online" {...field} className="input-field" />
+                    <Input placeholder="Venue of the event or Remote" {...field} className="bg-slate-100 h-[54px] placeholder:text-gray-500 rounded-xl px-4 py-3 border-none" />
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -221,14 +218,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <div className="flex-center h-[54px] w-full overflow-hidden rounded-full px-4 py-2">
+                  <div className="flex justify-center items-center bg-slate-100 h-[54px] w-full overflow-hidden rounded-xl px-4 py-2">
                     <Image
                       src="/assets/icons/calendar.svg"
                       alt="calendar"
                       width={24}
                       height={24}
                     />
-                    <p className="ml-3 whitespace-nowrap">Start Date:</p>
+                    <p className="ml-3 whitespace-nowrap text-gray-600">Start Date:</p>
                     <DatePicker
                       selected={field.value}
                       onChange={(date: Date) => field.onChange(date)}
@@ -251,14 +248,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <div className="flex-center h-[54px] w-full overflow-hidden rounded-full px-4 py-2">
+                  <div className="flex justify-center items-center bg-slate-100 h-[54px] w-full overflow-hidden rounded-xl px-4 py-2">
                     <Image
                       src="/assets/icons/calendar.svg"
                       alt="calendar"
                       width={24}
                       height={24}
                     />
-                    <p className="ml-3 whitespace-nowrap">End Date:</p>
+                    <p className="ml-3 whitespace-nowrap text-gray-600">End Date:</p>
                     <DatePicker
                       selected={field.value}
                       onChange={(date: Date) => field.onChange(date)}
@@ -282,15 +279,14 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
+                  <div className="flex justify-center items-center h-[54px] w-full overflow-hidden rounded-xl bg-slate-100 px-4 py-2">
                     <Image
                       src="/assets/icons/rupee.svg"
                       alt="dollar"
                       width={24}
                       height={24}
-                      className="filter-grey"
                     />
-                    <Input type="number" placeholder="Fees" {...field} className="p-regular-16 border-0 bg-grey-50 outline-offset-0 focus:border-0 focus-visible:ring-0 focus-visible:ring-offset-0" />
+                    <Input type="number" placeholder="Fees" {...field} className="border-none rounded-2xl bg-white mx-2 placeholder:text-gray-500" />
                     <FormField
                       control={form.control}
                       name="isFree"
@@ -298,11 +294,11 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                         <FormItem>
                           <FormControl>
                             <div className="flex items-center">
-                              <label htmlFor="isFree" className="whitespace-nowrap pr-3 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">No Fees</label>
+                              <label htmlFor="isFree" className="whitespace-nowrap p-3 text-gray-600">No Fees</label>
                               <Checkbox
                                 onCheckedChange={field.onChange}
                                 checked={field.value}
-                                id="isFree" className="mr-2 h-5 w-5 border-2 border-primary-500" />
+                                id="isFree" className="mr-2 h-5 w-5 border-2 border-slate-400" />
                             </div>
 
                           </FormControl>
@@ -323,7 +319,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
             render={({ field }) => (
               <FormItem className="w-full">
                 <FormControl>
-                  <div className="flex-center h-[54px] w-full overflow-hidden rounded-full bg-grey-50 px-4 py-2">
+                  <div className="flex justify-center items-center h-[54px] w-full overflow-hidden rounded-xl bg-slate-100 px-4 py-2">
                     <Image
                       src="/assets/icons/link.svg"
                       alt="link"
@@ -331,7 +327,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
                       height={24}
                     />
 
-                    <Input placeholder="URL" {...field} className="input-field" />
+                    <Input placeholder="URL" {...field} className="bg-slate-100 h-[54px] placeholder:text-grey-500 rounded-xl px-4 py-3 border-none" />
                   </div>
 
                 </FormControl>
@@ -345,7 +341,7 @@ const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
           type="submit"
           size="lg"
           disabled={form.formState.isSubmitting}
-          className="rounded-full h-[54px] p-regular-16 col-span-2 w-full"
+          className="max-w-[250px] button text-lg bg-emerald-400"
         >
           {form.formState.isSubmitting ? (
             'Submitting...'

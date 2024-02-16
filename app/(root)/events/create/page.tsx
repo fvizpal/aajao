@@ -11,7 +11,7 @@ const Enveentpage = () => {
   return (
     <>
       <section>
-        <h3>Create Event</h3>
+        <h3 className='p-6 text-2xl font-bold'>Create Event</h3>
       </section>
       <div>
         <EventForm userId={userId} type={"Create"} />

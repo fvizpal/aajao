@@ -27,8 +27,9 @@ const FileUploader = ({ imageUrl, onFieldChange, setFiles }: FileUploaderProps) 
   return (
     <div
       {...getRootProps()}
+      className='flex-center flex h-72 cursor-pointer flex-col overflow-hidden rounded-xl bg-slate-100'
     >
-      <input {...getInputProps()} />\
+      <input {...getInputProps()} />
 
       {imageUrl ? (
         <div>
@@ -37,15 +38,14 @@ const FileUploader = ({ imageUrl, onFieldChange, setFiles }: FileUploaderProps) 
             alt="eventImage"
             width={200}
             height={200}
-
+            className='w-full object-cover object-center'
           />
         </div>
       ) : (
-        <div>
-          <img src='/assests/icons/upload.svg' alt='fileupload' width={70} height={70} />
-          <h3>Drag photos here</h3>
-          <p>SVG, PNG, JPG, JPEG</p>
-          <Button>
+        <div className='flex justify-center items-center flex-col py-5 text-gray-500'>
+          <img src='/assets/icons/upload.svg' alt='fileupload' width={70} height={70} />
+          <h3 className='my-2'>Drag photos here</h3>
+          <Button type='button' className='rounded-full bg-slate-400 text-white'>
             SELECT
           </Button>
         </div>

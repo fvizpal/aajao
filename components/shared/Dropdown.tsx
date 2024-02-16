@@ -36,27 +36,27 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
-      <SelectTrigger>
+      <SelectTrigger className="w-full bg-gray-50 h-[54px] placeholder:text-gray-500 rounded-full px-5 py-3 border-none">
         <SelectValue placeholder="Category" />
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent className="bg-gray-50 rounded-lg">
         {categories.length > 0 && categories.map((category) => (
-          <SelectItem key={category._id} value={category._id}>
+          <SelectItem key={category._id} value={category._id} className="py-3 cursor-pointer focus:bg-gray-50">
             {category.name}
           </SelectItem>
         ))}
 
-        <AlertDialog>
-          <AlertDialogTrigger>Add new category</AlertDialogTrigger>
-          <AlertDialogContent>
+        <AlertDialog >
+          <AlertDialogTrigger className="flex w-full rounded-sm py-3 pl-8 text-gray-500 hover:bg-gray-50 focus:text-gray-500">Add new category</AlertDialogTrigger>
+          <AlertDialogContent className="bg-white">
             <AlertDialogHeader>
               <AlertDialogTitle>New Category</AlertDialogTitle>
               <AlertDialogDescription>
-                <Input type="text" placeholder="Category name" onChange={(e) => setNewCategory(e.target.value)} />
+                <Input type="text" placeholder="Category name" onChange={(e) => setNewCategory(e.target.value)} className="bg-gray-50 h-[54px] focus-visible:ring-offset-0 placeholder:text-grey-500 rounded-full px-4 py-3 border-none mt-3" />
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel >Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={() => handleAddCategory}>Add</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

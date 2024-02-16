@@ -24,7 +24,9 @@ const MobileNav = () => {
           />
         </SheetTrigger>
         <SheetContent className="flex flex-col gap-6 bg-white md:hidden">
-          Aajao
+          <div>
+            Aa<span className="text-emerald-800 font-bold">jao</span>
+          </div>
           <NavItems />
         </SheetContent>
       </Sheet>
