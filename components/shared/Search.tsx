@@ -40,7 +40,7 @@ const Search = () => {
         type="text"
         placeholder={'Search event...'}
         onChange={(e) => setQuery(e.target.value)}
-        className="border-0 outline-offset-0 placeholder:text-grey-500 focus:border-0"
+        className="rounded-2xl bg-slate-100 border-0 placeholder:text-grey-500 focus:border-0"
       />
     </div>
   )

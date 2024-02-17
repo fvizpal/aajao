@@ -22,9 +22,9 @@ export default async function Home({ searchParams }: SearchParamProps) {
   return (
     <>
       <section className='py-5 md:py-10'>
-        <div className='max-w-7xl p-5 w-full grid grid-cols-1 gap-5 md:grid-cols-2 2xl:gap-0'>
-          <div className='flex flex-col justify-center gap-8'>
-            <h1 className="h1-bold">Organise events here with us</h1>
+        <div className='max-w-7xl p-5 w-full flex flex-col gap-5 md:flex-row'>
+          <div className='flex flex-col justify-center gap-8 ml-20'>
+            <h1 className=" font-bold text-[40px]">Organise events here with us</h1>
             <Button size="lg" asChild className="button w-full sm:w-fit">
               <Link href="#events">
                 Explore Now
@@ -36,12 +36,12 @@ export default async function Home({ searchParams }: SearchParamProps) {
             alt='events'
             width={1000}
             height={1000}
-            className='my-10 max-h-[50vh] object-contain object-center'
+            className='p-5 my-10 max-h-[50vh] rounded-xl object-contain object-center'
           />
         </div>
       </section>
       <section>
-        <div className='flex w-full flex-col gap-5 md:flex-row'>
+        <div className='flex w-full justify-between flex-col gap-5 md:flex-row'>
           <Search />
           <CategoryFilter />
         </div>

@@ -15,12 +15,8 @@
     @apply flex justify-between items-center;
   }
 
-  .h1-bold {
-    @apply font-bold text-[40px] leading-[48px];
-  }
-
   .button {
-    @apply rounded-full h-[54px];
+    @apply rounded-full h-[54px] bg-emerald-400 font-bold;
   }
 }
 
