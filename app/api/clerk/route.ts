@@ -6,10 +6,12 @@ import { clerkClient } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
+
+  // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
 
   if (!WEBHOOK_SECRET) {
-    throw new Error('Add webhook secret');
+    throw new Error('Please add WEBHOOK_SECRET from Clerk Dashboard to .env or .env.local')
   }
 
   // Get the headers
@@ -25,9 +27,11 @@ export async function POST(req: Request) {
     })
   }
 
+  // Get the body
   const payload = await req.json()
   const body = JSON.stringify(payload);
 
+  // Create a new Svix instance with your secret.
   const wh = new Webhook(WEBHOOK_SECRET);
 
   let evt: WebhookEvent
@@ -46,7 +50,8 @@ export async function POST(req: Request) {
     })
   }
 
-  // Get the type
+  // Get the ID and type
+  const { id } = evt.data;
   const eventType = evt.type;
 
   if (eventType === 'user.created') {
