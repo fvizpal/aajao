@@ -5,17 +5,17 @@ export default authMiddleware({
   publicRoutes: [
     '/',
     '/events/:id',
-    '/api/clerk',
-    '/api/stripe',
-    '/api/uploadthing',
+    '/api/webhook/clerk',
+    '/api/webhook/stripe',
+    '/api/uploadthing'
   ],
   ignoredRoutes: [
-    '/api/clerk',
-    '/api/stripe',
-    '/api/uploadthing',
+    '/api/webhook/clerk',
+    '/api/webhook/stripe',
+    '/api/uploadthing'
   ]
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };
