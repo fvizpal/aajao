@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import * as z from 'zod'
 import Dropdown from "./Dropdown"
 import { Textarea } from "@/components/ui/textarea"
-import { FileUploader } from "./fileUploader"
 import { useState } from "react"
 import Image from "next/image"
 import DatePicker from "react-datepicker";
@@ -19,6 +18,7 @@ import { Checkbox } from "../ui/checkbox"
 import { useRouter } from "next/navigation"
 import { createEvent, updateEvent } from "@/lib/actions/event.actions"
 import { IEvent } from "@/lib/database/models/event.model"
+import { FileUploader } from "./fileUploader"
 
 
 type EventFormProps = {
