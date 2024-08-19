@@ -82,7 +82,7 @@ export type SearchParamProps = {
   searchParams: { [key: string]: string | string[] | undefined }
 }
 
-export type CheckoutOrderParamas = {
+export type CheckoutOrderParams = {
   eventTitle: string,
   eventId: string,
   fees: string,
@@ -90,7 +90,7 @@ export type CheckoutOrderParamas = {
   buyerId: string,
 }
 
-export type createOrderPramas = {
+export type CreateOrderParams = {
   stripeId: string
   eventId: string
   buyerId: string
@@ -112,7 +112,7 @@ export type GetEventsByUserParams = {
 
 export type GetOrdersByEventParams = {
   eventId: string
-  searchText: string
+  searchString: string
 }
 
 
