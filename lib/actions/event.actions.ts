@@ -1,145 +1,252 @@
 'use server'
 
 import { revalidatePath } from "next/cache"
-import Event from "../database/models/event.model"
-import User from "../database/models/user.model"
-import { connectToDatabase } from "../database"
+import { db } from "../database"
 import { CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, UpdateEventParams } from "@/types"
-import Category from "../database/models/category.model"
 
-const populateEvent = (query: any) => {
-  return query
-    .populate({ path: 'organizer', model: User, select: '_id firstName lastName' })
-    .populate({ path: 'category', model: Category, select: '_id name' })
-}
 
 // CREATE
 export async function createEvent({ userId, event, path }: CreateEventParams) {
   try {
-    await connectToDatabase()
+    // Ensure the organizer exists
+    const organizer = await db.user.findUnique({
+      where: { id: userId },
+    });
+    if (!organizer) throw new Error('Organizer not found');
 
-    const organizer = await User.findById(userId)
-    if (!organizer) throw new Error('Organizer not found')
+    // Create the event
+    const newEvent = await db.event.create({
+      data: {
+        title: event.title,
+        description: event.description,
+        location: event.location,
+        imageUrl: event.imageUrl,
+        startDateTime: event.startDateTime,
+        endDateTime: event.endDateTime,
+        fees: event.fees,
+        isFree: event.isFree ?? true,
+        url: event.url,
+        category: {
+          connect: { id: event.categoryId },
+        },
+        organiser: {
+          connect: { id: userId },
+        },
+      },
+    });
 
-    const newEvent = await Event.create({ ...event, category: event.categoryId, organizer: userId })
-    revalidatePath(path)
+    revalidatePath(path);
 
-    return JSON.parse(JSON.stringify(newEvent))
+    // Return the newly created event
+    return newEvent;
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw new Error('Failed to create event');
   }
 }
 
 // UPDATE
 export async function updateEvent({ userId, event, path }: UpdateEventParams) {
   try {
-    await connectToDatabase()
+    // Check if the event exists and belongs to the user
+    const eventToUpdate = await db.event.findUnique({
+      where: { id: event.id },
+      include: { organiser: true },
+    });
 
-    const eventToUpdate = await Event.findById(event._id)
-    if (!eventToUpdate || eventToUpdate.organizer.toHexString() !== userId) {
-      throw new Error('Unauthorized or event not found')
+    if (!eventToUpdate || eventToUpdate.organiserId !== userId) {
+      throw new Error('Unauthorized or event not found');
     }
 
-    const updatedEvent = await Event.findByIdAndUpdate(
-      event._id,
-      { ...event, category: event.categoryId },
-      { new: true }
-    )
-    revalidatePath(path)
+    // Update the event
+    const updatedEvent = await db.event.update({
+      where: { id: event.id },
+      data: {
+        title: event.title,
+        description: event.description,
+        location: event.location,
+        imageUrl: event.imageUrl,
+        startDateTime: event.startDateTime,
+        endDateTime: event.endDateTime,
+        fees: event.fees,
+        isFree: event.isFree,
+        url: event.url,
+        category: event.categoryId ? { connect: { id: event.categoryId } } : undefined,
+      },
+    });
 
-    return JSON.parse(JSON.stringify(updatedEvent))
+    // Revalidate the path
+    revalidatePath(path);
+
+    // Return the updated event
+    return updatedEvent;
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw new Error('Failed to update event');
   }
 }
 
 // GET EVENT BY ID
 export async function getEventById(eventId: string) {
   try {
-    await connectToDatabase()
+    // Fetch the event along with its organizer and category
+    const event = await db.event.findUnique({
+      where: { id: eventId },
+      include: {
+        organiser: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-    const event = await populateEvent(Event.findById(eventId))
+    if (!event) throw new Error('Event not found');
 
-    if (!event) throw new Error('Event not found')
-
-    return JSON.parse(JSON.stringify(event))
+    // Return the event data
+    return event;
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw new Error('Failed to retrieve event');
   }
 }
 
+// delete event
 export async function deleteEvent({ eventId, path }: DeleteEventParams) {
   try {
-    await connectToDatabase()
+    // Delete the event by its ID
+    const deletedEvent = await db.event.delete({
+      where: { id: eventId },
+    });
 
-    const deletedEvent = await Event.findByIdAndDelete(eventId)
-    if (deletedEvent) revalidatePath(path)
+    // Revalidate the path if the event was successfully deleted
+    if (deletedEvent) revalidatePath(path);
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw new Error('Failed to delete event');
   }
 }
 
 const getCategoryByName = async (name: string) => {
-  return Category.findOne({ name: { $regex: name, $options: 'i' } })
-}
+  return db.category.findFirst({
+    where: {
+      name: {
+        equals: name,
+        mode: 'insensitive', // Case-insensitive search
+      },
+    },
+  });
+};
 
-export async function getAllEvents({ query, limit = 6, page, category }: GetAllEventsParams) {
+export async function getAllEvents({ query, limit = 6, page = 1, category }: GetAllEventsParams) {
   try {
-    await connectToDatabase()
+    // Get category condition
+    let categoryCondition = {};
 
-    const titleCondition = query ? { title: { $regex: query, $options: 'i' } } : {}
-    const categoryCondition = category ? await getCategoryByName(category) : null
-    const conditions = {
-      $and: [titleCondition, categoryCondition ? { category: categoryCondition._id } : {}],
+    if (category) {
+      const categoryData = await getCategoryByName(category);
+      if (categoryData) {
+        categoryCondition = { categoryId: categoryData.id };
+      }
     }
 
-    const skipAmount = (Number(page) - 1) * limit
-    const eventsQuery = Event.find(conditions)
-      .sort({ createdAt: 'desc' })
-      .skip(skipAmount)
-      .limit(limit)
+    // Create title condition
+    const titleCondition = query ? { title: { contains: query, mode: 'insensitive' } } : {};
 
-    const events = await populateEvent(eventsQuery)
-    const eventsCount = await Event.countDocuments(conditions)
+    // Calculate pagination
+    const skipAmount = (Number(page) - 1) * limit;
+
+    // Query events with filters, pagination, and sorting
+    const events = await db.event.findMany({
+      where: {
+        AND: [
+          titleCondition,
+          categoryCondition,
+        ],
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: skipAmount,
+      take: limit,
+      include: {
+        category: true,  // Include related category data
+        organiser: true, // Include related organiser data
+      },
+    });
+
+    // Count total number of events for pagination
+    const eventsCount = await db.event.count({
+      where: {
+        AND: [
+          titleCondition,
+          categoryCondition,
+        ],
+      },
+    });
 
     return {
-      data: JSON.parse(JSON.stringify(events)),
+      data: events,
       totalPages: Math.ceil(eventsCount / limit),
-    }
+    };
   } catch (error) {
-    console.log(error)
+    console.log(error);
+    throw new Error('Failed to fetch events');
   }
 }
 
-export async function getEventsByUser({ userId, limit = 6, page }: GetEventsByUserParams) {
+export async function getEventsByUser({ userId, limit = 6, page = 1 }: GetEventsByUserParams) {
   try {
-    await connectToDatabase();
-
-    const conditions = { organiser: userId };
+    // Calculate the amount to skip for pagination
     const skipAmount = (Number(page) - 1) * limit;
 
-    const events = await Event.find(conditions)
-      .sort({ createdAt: 'desc' })
-      .skip(skipAmount)
-      .limit(limit)
-      .populate({
-        path: 'category',
-        model: Category,
-        select: '_id name'
-      })
-      .populate({
-        path: 'organiser',
-        model: User,
-        select: '_id firstName lastName'
-      })
+    // Fetch events created by the user, including the related category and organiser
+    const events = await db.event.findMany({
+      where: {
+        organiserId: userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: skipAmount,
+      take: limit,
+      include: {
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        organiser: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
 
-    const eventsCount = await Event.countDocuments(conditions);
+    // Count the total number of events for the user
+    const eventsCount = await db.event.count({
+      where: {
+        organiserId: userId,
+      },
+    });
 
+    // Return the paginated data and total pages
     return {
-      data: JSON.parse(JSON.stringify(events)),
-      totalPages: eventsCount / limit + 1,
-    }
+      data: events,
+      totalPages: Math.ceil(eventsCount / limit),
+    };
   } catch (error) {
     console.log(error);
+    throw new Error('Failed to retrieve events');
   }
 }

@@ -31,6 +31,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
               </Link>
             </Button>
           </div>
+
           <Image
             src={'/assets/images/hero1.png'}
             alt='events'
@@ -41,15 +42,16 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </div>
       </section>
       <section>
-        <div className='flex w-full justify-between flex-col gap-5 md:flex-row'>
+        <div className="flex w-full flex-col gap-5 md:flex-row">
           <Search />
           <CategoryFilter />
         </div>
 
         <Collection
+          // @ts-ignore
           data={events?.data}
           emptyTitle="No Events Found"
-          emptyStateSubText="Come back later"
+          emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={6}
           page={page}

@@ -1,23 +1,23 @@
 'use client'
 
+import { useCallback, Dispatch, SetStateAction } from 'react'
 import { useDropzone } from '@uploadthing/react/hooks'
-import { Dispatch, SetStateAction, useCallback } from 'react'
 import { generateClientDropzoneAccept } from 'uploadthing/client'
-import { Button } from '../ui/button'
+
+import { Button } from '@/components/ui/button'
+import { convertFileToUrl } from '@/lib/utils'
 
 type FileUploaderProps = {
-  imageUrl: string,
-  onFieldChange: (url: string) => void,
+  onFieldChange: (url: string) => void
+  imageUrl: string
   setFiles: Dispatch<SetStateAction<File[]>>
 }
-const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
-const FileUploader = ({ imageUrl, onFieldChange, setFiles }: FileUploaderProps) => {
-
+export function FileUploader({ imageUrl, onFieldChange, setFiles }: FileUploaderProps) {
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setFiles(acceptedFiles)
     onFieldChange(convertFileToUrl(acceptedFiles[0]))
-  }, []);
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -27,31 +27,30 @@ const FileUploader = ({ imageUrl, onFieldChange, setFiles }: FileUploaderProps) 
   return (
     <div
       {...getRootProps()}
-      className='flex-center flex h-72 cursor-pointer flex-col overflow-hidden rounded-xl bg-slate-100'
+      className="flex-center bg-dark-3 flex h-72 cursor-pointer flex-col overflow-hidden rounded-xl bg-grey-50"
     >
-      <input {...getInputProps()} />
+      <input {...getInputProps()} className="cursor-pointer" />
 
       {imageUrl ? (
-        <div>
+        <div className="flex h-full w-full flex-1 justify-center ">
           <img
             src={imageUrl}
-            alt="eventImage"
-            width={200}
-            height={200}
-            className='w-full object-cover object-center'
+            alt="image"
+            width={250}
+            height={250}
+            className="w-full object-cover object-center"
           />
         </div>
       ) : (
-        <div className='flex justify-center items-center flex-col py-5 text-gray-500'>
-          <img src='/assets/icons/upload.svg' alt='fileupload' width={70} height={70} />
-          <h3 className='my-2'>Drag photos here</h3>
-          <Button type='button' className='rounded-full bg-slate-400 text-white'>
-            SELECT
+        <div className="flex-center flex-col py-5 text-grey-500">
+          <img src="/assets/icons/upload.svg" width={77} height={77} alt="file upload" />
+          <h3 className="mb-2 mt-2">Drag photo here</h3>
+          <p className="p-medium-12 mb-4">SVG, PNG, JPG</p>
+          <Button type="button" className="rounded-full">
+            Select from computer
           </Button>
         </div>
       )}
     </div>
   )
 }
-
-export default FileUploader

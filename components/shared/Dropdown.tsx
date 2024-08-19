@@ -4,6 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from ".
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "../ui/alert-dialog"
 import { Input } from "../ui/input"
 import { createCategory, getAllCategories } from "@/lib/actions/category.actions"
+import { Category } from "@prisma/client"
 
 
 type DropdownProps = {
@@ -12,7 +13,7 @@ type DropdownProps = {
 }
 
 const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
-  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [newCategory, setNewCategory] = useState('');
 
   const handleAddCategory = () => {
@@ -28,7 +29,7 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
     const getCategories = async () => {
       const categoryList = await getAllCategories();
 
-      categoryList && setCategories(categoryList as ICategory[])
+      categoryList && setCategories(categoryList as Category[])
     }
 
     getCategories();
@@ -41,7 +42,7 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
       </SelectTrigger>
       <SelectContent className="bg-gray-50 rounded-lg">
         {categories.length > 0 && categories.map((category) => (
-          <SelectItem key={category._id} value={category._id} className="py-3 cursor-pointer focus:bg-gray-50">
+          <SelectItem key={category.id} value={category.id} className="py-3 cursor-pointer focus:bg-gray-50">
             {category.name}
           </SelectItem>
         ))}

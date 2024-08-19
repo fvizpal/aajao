@@ -1,29 +1,33 @@
 "use server"
 
 import { CreateCategoryParams } from "@/types"
-import { connectToDatabase } from "../database"
 import Category from "../database/models/category.model"
+import { db } from "../database";
 
 export const createCategory = async ({ categoryName }: CreateCategoryParams) => {
   try {
-    await connectToDatabase();
+    // Create a new category using Prisma
+    const newCategory = await db.category.create({
+      data: {
+        name: categoryName,
+      },
+    });
 
-    const newCategory = await Category.create({ name: categoryName });
-
-    return JSON.parse(JSON.stringify(newCategory));
+    return newCategory;
   } catch (error) {
-    console.log(error)
+    console.error('Error creating category:', error);
+    throw new Error('Failed to create category');
   }
 }
 
 export const getAllCategories = async () => {
   try {
-    await connectToDatabase();
+    // Retrieve all categories using Prisma
+    const categories = await db.category.findMany();
 
-    const categories = await Category.find();
-
-    return JSON.parse(JSON.stringify(categories));
+    return categories;
   } catch (error) {
-    console.log(error)
+    console.error('Error fetching categories:', error);
+    throw new Error('Failed to fetch categories');
   }
 }

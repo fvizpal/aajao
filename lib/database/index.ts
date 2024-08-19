@@ -1,20 +1,9 @@
-import mongoose from 'mongoose';
+import { PrismaClient } from "@prisma/client";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-//typescript
-let cached = (global as any).mongoose || { conn: null, promise: null };
-
-export const connectToDatabase = async () => {
-  if (cached.conn) return cached.conn;
-
-  if (!MONGODB_URI) throw new Error('MONGODB_URI is missing');
-
-  cached.promise = cached.promise || mongoose.connect(MONGODB_URI, {
-    dbName: 'aajao',
-    bufferCommands: false,
-  })
-
-  cached.conn = await cached.promise;
-
-  return cached.conn;
+declare global {
+  var prisma: PrismaClient | undefined
 }
+// global is not affectd  by hot reload
+export const db = globalThis.prisma || new PrismaClient();
+
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = db;

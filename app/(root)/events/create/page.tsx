@@ -1,12 +1,12 @@
-import EventForm from '@/components/forms/EventForm';
-import { auth } from '@clerk/nextjs';
+import EventForm from '@/components/shared/EventForm';
+import { currentUser } from '@/lib/data/auth';
 import React from 'react'
 
-const Enveentpage = () => {
+const Enventpage = async () => {
 
-  const { sessionClaims } = auth();
+  const user = await currentUser();
 
-  const userId = sessionClaims?.userId as string;
+  const userId = user?.id as string
 
   return (
     <>
@@ -20,4 +20,4 @@ const Enveentpage = () => {
   )
 }
 
-export default Enveentpage
+export default Enventpage

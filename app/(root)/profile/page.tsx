@@ -2,15 +2,15 @@ import Collection from '@/components/shared/Collection'
 import { Button } from '@/components/ui/button'
 import { getEventsByUser } from '@/lib/actions/event.actions'
 import { getOrdersByUser } from '@/lib/actions/order.actions'
+import { currentUser } from '@/lib/data/auth'
 import { IOrder } from '@/lib/database/models/order.model'
 import { SearchParamProps } from '@/types'
-import { auth } from '@clerk/nextjs'
 import Link from 'next/link'
 import React from 'react'
 
 const ProfilePage = async ({ searchParams }: SearchParamProps) => {
-  const { sessionClaims } = auth();
-  const userId = sessionClaims?.userId as string;
+  const user = await currentUser();
+  const userId = user?.id as string;
 
   const ordersPage = Number(searchParams?.ordersPage) || 1;
   const eventsPage = Number(searchParams?.eventsPage) || 1;
@@ -38,7 +38,7 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
         <Collection
           data={orderedEvents}
           emptyTitle="No event tickets purchased yet"
-          emptyStateSubText="Explore more events"
+          emptyStateSubtext="Explore more events"
           collectionType="My_Tickets"
           limit={3}
           page={ordersPage}
@@ -61,6 +61,7 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
 
       <section>
         <Collection
+          // @ts-ignore
           data={organizedEvents?.data}
           emptyTitle="No events have been created yet"
           emptyStateSubText="Hop on and create some events now"
