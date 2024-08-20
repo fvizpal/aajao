@@ -118,26 +118,6 @@ export type GetOrdersByEventParams = {
 
 // types.ts
 
-import { User, Category } from "@prisma/client"
-// Define the User type
-// export interface User {
-//   id: string;
-//   name?: string;
-//   email?: string;
-//   emailVerified?: Date;
-//   image?: string;
-//   password?: string;
-//   accounts?: Account[]; // Adjust if you have a more specific type
-//   createdAt: Date;
-//   updatedAt: Date;
-// }
-
-// Define the Category type
-// export interface Category {
-//   id: string;
-//   name: string;
-// }
-
 // Define the Event type with nested User and Category types
 export type Event = {
   id: string;
