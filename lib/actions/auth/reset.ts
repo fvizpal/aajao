@@ -30,10 +30,10 @@ export const reset = async (values: z.infer<typeof ResetSchema>) => {
   const resetLink = `${domain}/auth/new-password?token=${token}`
 
   const emailContent = {
-    subject: 'Password reset | From BaatCheet',
+    subject: 'Password reset | From aajao',
     body: `
       <div>
-        <h2>Greetings form team BaatCheet 🚀</h2>
+        <h2>Greetings form team aajao 🚀</h2>
         <div style="border: 1px solid #ccc; padding: 10px; background-color: #f8f8f8;">
           <h3>Password reset</h3>
           <p>Click the following link to redirect to password reset page</p>

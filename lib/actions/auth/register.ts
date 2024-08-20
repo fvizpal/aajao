@@ -41,7 +41,7 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const confirmLink = `${domain}/auth/new-verification?token=${token}`;
 
   const emailContent = {
-    subject: 'Email verification | From Fassal',
+    subject: 'Email verification | From Aajao',
     body: `
       <div>
         <h2>Welcome to Fassal 🚀</h2>
