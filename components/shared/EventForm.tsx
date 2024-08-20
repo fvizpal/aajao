@@ -54,20 +54,20 @@ export const eventFormSchema = z.object({
 
 const EventForm = ({ userId, type, event, eventId }: EventFormProps) => {
   const [files, setFiles] = useState<File[]>([])
-  const initialValues = event && type === 'Update'
-    ? {
-      ...event,
-      startDateTime: new Date(event.startDateTime),
-      endDateTime: new Date(event.endDateTime)
-    }
-    : eventDefaultValues;
+  // const initialValues = event && type === 'Update'
+  //   ? {
+  //     ...event,
+  //     startDateTime: new Date(event.startDateTime),
+  //     endDateTime: new Date(event.endDateTime)
+  //   }
+  //   : eventDefaultValues;
   const router = useRouter();
 
   const { startUpload } = useUploadThing('imageUploader')
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
-    defaultValues: initialValues
+    defaultValues: eventDefaultValues
   })
 
   async function onSubmit(values: z.infer<typeof eventFormSchema>) {
