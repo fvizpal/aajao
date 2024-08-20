@@ -142,6 +142,12 @@ export async function getOrdersByUser({ userId, limit = 3, page }: GetOrdersByUs
       include: {
         event: {
           include: {
+            category: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
             organiser: {
               select: {
                 id: true,

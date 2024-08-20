@@ -48,7 +48,6 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </div>
 
         <Collection
-          // @ts-ignore
           data={events?.data}
           emptyTitle="No Events Found"
           emptyStateSubtext="Come back later"

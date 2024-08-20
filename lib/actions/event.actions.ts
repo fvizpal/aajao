@@ -177,8 +177,18 @@ export async function getAllEvents({ query, limit = 6, page = 1, category }: Get
       skip: skipAmount,
       take: limit,
       include: {
-        category: true,  // Include related category data
-        organiser: true, // Include related organiser data
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        organiser: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
 

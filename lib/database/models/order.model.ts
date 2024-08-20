@@ -1,22 +1,40 @@
 import { Schema, model, models, Document } from 'mongoose'
 
-export interface IOrder extends Document {
-  createdAt: Date
-  stripeId: string
-  totalAmount: string
+export interface IOrder {
+  id: string;
+  createdAt: Date;
+  buyerId: string | null;
+  // Add other fields present in the `order` table as needed
+
   event: {
-    _id: string
-    title: string
-  }
-  buyer: {
-    _id: string
-    firstName: string
-    lastName: string
-  }
+    id: string; // assuming event has an id field
+    title: string; // assuming event has a title field
+    // Add other fields present in the `event` table as needed
+
+    organiser: {
+      id: string;
+      name: string;
+    } | null; // organiser can be null if the event has no organiser
+  } | null; // event can be null if the order has no associated event
 }
 
+
+// export interface IOrder {
+//   createdAt: Date
+//   stripeId: string
+//   totalAmount: string
+//   event: {
+//     id: string
+//     title: string
+//   }
+//   buyer: {
+//     id: string
+//     name: string
+//   }
+// }
+
 export type IOrderItem = {
-  _id: string
+  id: string
   totalAmount: string
   createdAt: Date
   eventTitle: string

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { getEventsByUser } from '@/lib/actions/event.actions'
 import { getOrdersByUser } from '@/lib/actions/order.actions'
 import { currentUser } from '@/lib/data/auth'
+import { IEvent } from '@/lib/database/models/event.model'
 import { IOrder } from '@/lib/database/models/order.model'
 import { SearchParamProps } from '@/types'
 import Link from 'next/link'
@@ -15,10 +16,13 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
   const ordersPage = Number(searchParams?.ordersPage) || 1;
   const eventsPage = Number(searchParams?.eventsPage) || 1;
 
-  const orders = await getOrdersByUser({ userId, page: ordersPage })
+  const orders = await getOrdersByUser({ userId, page: ordersPage });
+  const orderedEvents = orders?.data
+    .map((order) => order.event)
+    .filter((event): event is NonNullable<typeof event> => event !== null) as IEvent[];
 
-  const orderedEvents = orders?.data.map((order: IOrder) => order.event) || [];
-  const organizedEvents = await getEventsByUser({ userId, page: eventsPage })
+
+  const organizedEvents = await getEventsByUser({ userId, page: eventsPage });
 
   return (
     <>
@@ -61,10 +65,9 @@ const ProfilePage = async ({ searchParams }: SearchParamProps) => {
 
       <section>
         <Collection
-          // @ts-ignore
           data={organizedEvents?.data}
           emptyTitle="No events have been created yet"
-          emptyStateSubText="Hop on and create some events now"
+          emptyStateSubtext="Hop on and create some events now"
           collectionType="Events_Organized"
           limit={3}
           page={eventsPage}

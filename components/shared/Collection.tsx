@@ -1,10 +1,11 @@
 
-import { Event } from "@/types";
+
 import Card from "./Card";
 import PaginationEl from "./Pagination";
+import { IEvent } from "@/lib/database/models/event.model";
 
 type CollectionProps = {
-  data: Event[],
+  data: IEvent[],
   emptyTitle: string,
   emptyStateSubtext: string,
   limit: number,

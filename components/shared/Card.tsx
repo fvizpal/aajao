@@ -6,9 +6,10 @@ import DeleteConfirm from './DeleteConfirm'
 import { formatDateTime } from '@/lib/utils'
 import { currentUser } from '@/lib/data/auth'
 import { Event } from '@/types'
+import { IEvent } from '@/lib/database/models/event.model'
 
 type CardProps = {
-  event: Event,
+  event: IEvent,
   hasOrderLink?: boolean,
   hidePrice?: boolean
 }

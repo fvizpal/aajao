@@ -23,7 +23,6 @@ const UpdateEvent = async ({ params: { id } }: UpdateEventProps) => {
       <div>
         <EventForm
           type="Update"
-          // @ts-ignore
           event={event}
           eventId={event.id}
           userId={userId}

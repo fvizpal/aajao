@@ -1,19 +1,19 @@
 import { Document, Schema, model, models } from "mongoose";
 
-export interface IEvent extends Document {
-  _id: string;
+export interface IEvent {
+  id: string;
   title: string;
-  description?: string;
-  location?: string;
+  description?: string | null;
+  location?: string | null;
   createdAt: Date;
   imageUrl: string;
   startDateTime: Date;
   endDateTime: Date;
-  fees: string;
+  fees: string | null;
   isFree: boolean;
-  url?: string;
-  category: { _id: string, name: string }
-  organiser: { _id: string, firstName: string, lastName: string }
+  url?: string | null;
+  category: { id: string; name: string | null } | null;
+  organiser: { id: string; name: string | null } | null;
 }
 
 const EventSchema = new Schema({
