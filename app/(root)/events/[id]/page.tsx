@@ -17,14 +17,14 @@ const EventsDetails = async ({ params: { id }, searchParams }: SearchParamProps)
 
   return (
     <>
-      <section className="flex justify-center bg-slate-100 bg-contain">
+      <section className="flex justify-center m-5 p-5 rounded-lg bg-slate-100 bg-contain">
         <div className="grid grid-cols-1 md:grid-cols-2 2xl:max-w-7xl">
           <Image
             src={event.imageUrl}
             alt="hero image"
             width={1000}
             height={1000}
-            className="h-full min-h-[300px] object-cover object-center"
+            className="h-full min-h-[300px] rounded-lg object-cover object-center"
           />
 
           <div className="flex w-full flex-col gap-8 p-5 md:p-10">

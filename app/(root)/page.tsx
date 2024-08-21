@@ -42,7 +42,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         </div>
       </section>
       <section>
-        <div className="flex w-full flex-col gap-5 md:flex-row">
+        <div className="flex w-full flex-col p-5 gap-5 md:flex-row">
           <Search />
           <CategoryFilter />
         </div>

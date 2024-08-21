@@ -1,5 +1,8 @@
 'use client'
 
+import { useTransition } from 'react'
+import { usePathname } from 'next/navigation'
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,49 +13,42 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
-import { deleteEvent } from "@/lib/actions/event.actions"
-import Image from "next/image"
-import { usePathname } from "next/navigation"
-import { useTransition } from "react"
+} from '@/components/ui/alert-dialog'
 
-type DeleteEventProp = {
-  eventId: string,
-}
-const DeleteConfirm = ({ eventId }: DeleteEventProp) => {
+import { deleteEvent } from '@/lib/actions/event.actions'
+import { DeleteIcon, Trash } from 'lucide-react'
+
+export const DeleteConfirmation = ({ eventId }: { eventId: string }) => {
   const pathname = usePathname()
   let [isPending, startTransition] = useTransition()
 
-  const handleDelete = () => {
-    try {
-      startTransition(async () => {
-        await deleteEvent({ eventId, path: pathname })
-      })
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Image src="/assets/icons/delete.svg" alt="delte" width={20} height={20} />
+      <AlertDialogTrigger >
+        <Trash />
       </AlertDialogTrigger>
-      <AlertDialogContent>
+
+      <AlertDialogContent className="bg-white">
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This event will be permanently deleted.
+          <AlertDialogTitle>Are you sure you want to delete?</AlertDialogTitle>
+          <AlertDialogDescription className="p-regular-16 text-grey-600">
+            This will permanently delete this event
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+
+          <AlertDialogAction
+            onClick={() =>
+              startTransition(async () => {
+                await deleteEvent({ eventId, path: pathname })
+              })
+            }>
+            {isPending ? 'Deleting...' : 'Delete'}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   )
 }
-
-export default DeleteConfirm
