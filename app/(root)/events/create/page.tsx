@@ -1,5 +1,6 @@
 import EventForm from '@/components/shared/EventForm';
 import { currentUser } from '@/lib/data/auth';
+import { Console } from 'console';
 import React from 'react'
 
 const Enventpage = async () => {
@@ -7,6 +8,8 @@ const Enventpage = async () => {
   const user = await currentUser();
 
   const userId = user?.id as string
+
+  console.log("[userID in event>create>page]", userId);
 
   return (
     <>

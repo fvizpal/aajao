@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache"
 import { db } from "../database"
-import { CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, UpdateEventParams } from "@/types"
+import { CreateEventParams, DeleteEventParams, GetAllEventsParams, GetEventsByUserParams, GetRelatedEventsByCategoryParams, UpdateEventParams } from "@/types"
+import { handleError } from "../utils";
 
 
 // CREATE
@@ -258,5 +259,58 @@ export async function getEventsByUser({ userId, limit = 6, page = 1 }: GetEvents
   } catch (error) {
     console.log(error);
     throw new Error('Failed to retrieve events');
+  }
+}
+
+export async function getRelatedEventsByCategory({
+  categoryId,
+  eventId,
+  limit = 3,
+  page = 1,
+}: GetRelatedEventsByCategoryParams) {
+  try {
+    const skipAmount = (Number(page) - 1) * limit;
+
+    // Fetch related events with pagination
+    const events = await db.event.findMany({
+      where: {
+        categoryId: categoryId,
+        id: {
+          not: eventId, // Exclude the current event
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      skip: skipAmount,
+      take: limit,
+      include: {
+        category: true, // Include category details
+        organiser: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    // Count the total number of related events
+    const eventsCount = await db.event.count({
+      where: {
+        categoryId: categoryId,
+        id: {
+          not: eventId,
+        },
+      },
+    });
+
+    return {
+      data: events,
+      totalPages: Math.ceil(eventsCount / limit),
+    };
+  } catch (error) {
+    handleError(error);
+    throw new Error('Failed to fetch related events');
   }
 }

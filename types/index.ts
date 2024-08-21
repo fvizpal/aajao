@@ -66,6 +66,13 @@ export type DeleteEventParams = {
   path: string
 }
 
+export type GetRelatedEventsByCategoryParams = {
+  categoryId: string | undefined
+  eventId: string
+  limit?: number
+  page: number | string
+}
+
 export type UrlQueryParams = {
   params: string,
   key: string,

@@ -12,7 +12,7 @@ export const createCategory = async ({ categoryName }: CreateCategoryParams) => 
         name: categoryName,
       },
     });
-
+    console.log("[server function to add categoty]", newCategory)
     return newCategory;
   } catch (error) {
     console.error('Error creating category:', error);
