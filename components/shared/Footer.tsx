@@ -5,7 +5,10 @@ const Footer = () => {
       <div>
         All right reserved.
       </div>
-      <div>
+      <div
+        onClick={() => window.open('https://github.com/fvizpal', '_blank')}
+        style={{ cursor: 'pointer' }}
+      >
         @fvizpal
       </div>
     </footer>
