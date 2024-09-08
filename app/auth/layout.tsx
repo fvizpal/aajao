@@ -1,12 +1,18 @@
+import Header from "@/components/shared/Header";
+import Image from "next/image";
+
 const AuthLayout = ({
   children
 }: {
   children: React.ReactNode
 }) => {
   return (
-    <div className="h-full mt-10 flex items-center justify-center">
-      {children}
-    </div>
+    <>
+      <Header />
+      <div className="h-full mt-10 flex items-center justify-center">
+        {children}
+      </div>
+    </>
   );
 }
 
